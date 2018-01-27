@@ -26,6 +26,7 @@ class Champion extends Command {
       if (!level >= 2) return message.channel.send("You do not have permission to remove the current Champion.");
       const users = message.mentions.users;
       if (users.size === 0) return message.channel.send("To set a new Champion, please mention a user.");
+      if (users.first().bot) return message.channel.send("Hey, bots can't be Champions, try using a **REAL** user.");
       if (!champ === undefined) {
         const reply = await this.client.awaitReply(message, `Are you sure you want to replace the current Champion ${champion.tag} with ${users.first().tag}?`, m => m.author.id === message.author.id, 60000);
         if (["y","yes"].includes(reply.toLowerCase())) {

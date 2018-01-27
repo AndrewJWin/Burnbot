@@ -15,6 +15,7 @@ class Challenge extends Command {
       const champ = message.guild.champion;
       if (champ === undefined) return message.channel.send("There is no champion!");
       const champion = message.guild.members.filter(m => m.id === champ).first();
+      if (champion === message.member) return message.channel.send("You cannot challenge yourself you moron.");
       const agreement = await this.client.awaitReply(message, `Are you sure you want to challenge the current reigning Champion ${champion.user.tag}?`, m => m.author.id === message.author.id, 60000);
       if (["y", "yes", "hell yes"].includes(agreement.toLowerCase())) {
         const msg = await champion.send(`${message.author.tag} has challenged you!`);
@@ -22,10 +23,11 @@ class Challenge extends Command {
         if (["y", "yes", "hell yes"].includes(response.toLowerCase())) {
           return message.channel.send(`The Champion has entertained your request for a bout ${message.author}, are you ready to **feel the burn?!**`);
         } else {
+          if (!response) return message.channel.send(`The Champion did not respond in the time frame ${message.author}.`);
           return message.channel.send(`The Champion has refused your request for a bout ${message.author}! Does he feel threatened?!`);
         }
       } else {
-        return message.channel.send("You claim to be not worthy with your response. Try again when you grow a pair.");
+        return message.channel.send("Feeling scared?! Try again when you grow a pair.");
       }
     } catch (e) {
       console.log(e);
